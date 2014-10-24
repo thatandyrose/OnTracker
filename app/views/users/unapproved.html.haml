@@ -1,0 +1,16 @@
+%h1 Unapproved Users
+%table.table
+  %thead
+    %tr
+      %th id
+      %th email
+      %th created
+      %th
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td= user.id
+        %td= user.email
+        %td #{time_ago_in_words(user.created_at)} ago
+        %td
+          %a.btn.btn-large.btn-primary{href: approve_user_path(user)} Approve
