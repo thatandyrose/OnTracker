@@ -13,6 +13,12 @@ feature 'Sign in', :devise do
     expect(page).to have_content I18n.t 'devise.failure.not_found_in_database', authentication_keys: 'email'
   end
 
+  scenario 'user cannot sign in if not approved' do
+    user = FactoryGirl.create(:user, approved: false)
+    signin(user.email, user.password)
+    expect(page).to have_content I18n.t 'devise.failure.not_approved'
+  end
+
   # Scenario: User can sign in with valid credentials
   #   Given I exist as a user
   #   And I am not signed in
