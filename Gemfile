@@ -15,6 +15,8 @@ gem 'figaro', '>= 1.0.0.rc1'
 gem 'haml-rails'
 gem 'pg'
 gem 'thin'
+gem 'friendly_id', '~> 5.0.0'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]
