@@ -10,11 +10,12 @@
   .panel-footer
     .pull-left
       %span.label.label-default= @ticket.department
-      %small  ##{@ticket.id}
+      %small reference: #{@ticket.reference}
     .pull-right
-      - if @ticket.is_open?
+      - if current_user && @ticket.is_open?
         = render 'own_button', ticket: @ticket
       - else
-        %strong owner: 
-        = @ticket.user.email
+        - if @ticket.user
+          %strong owner: 
+          = @ticket.user.email
     .clearfix
