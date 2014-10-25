@@ -6,4 +6,9 @@ Rails.application.routes.draw do
     get :unapproved, on: :collection
     get :approve, on: :member
   end
+
+  resources :tickets do
+    get :open, on: :collection
+    get :own, on: :member
+  end
 end

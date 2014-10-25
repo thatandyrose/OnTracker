@@ -1,0 +1,19 @@
+%h1 Unapproved Users
+%table.table
+  %thead
+    %tr
+      %th id
+      %th department
+      %th subject
+      %th created
+      %th
+  %tbody
+    - @tickets.each do |ticket|
+      %tr
+        %td= ticket.id
+        %td= ticket.department
+        %td= ticket.subject
+        %td #{time_ago_in_words(ticket.created_at)} ago
+        %td
+          - if ticket.is_open?
+            = render 'own_button', ticket: ticket
