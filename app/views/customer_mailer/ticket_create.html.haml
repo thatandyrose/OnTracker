@@ -1,0 +1,8 @@
+%p Hi #{@name}
+
+%p Your ticket has been received, thanks! We'll let you know once someone replies to it.
+
+%p Click on the link below to track your ticket!
+
+%p
+  %a{href: ticket_path(@ticket, only_path: false)}= ticket_path(@ticket, only_path: false)

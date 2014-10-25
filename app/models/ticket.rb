@@ -1,11 +1,15 @@
 class Ticket < ActiveRecord::Base
   belongs_to :user
 
+  validates_presence_of :email
+
   default_scope { order(created_at: :desc) }
   scope :open, ->{ where(user_id:nil) }
 
   include FriendlyId
   friendly_id :generate_reference, use: :slugged
+
+  after_create :notify_create
 
   def generate_reference
     sr = SecureRandom
@@ -25,5 +29,9 @@ class Ticket < ActiveRecord::Base
   def take_ownership! owner
     self.user = owner
     self.save!
+  end
+
+  def notify_create
+    CustomerMailer.ticket_create(self).deliver
   end
 end
