@@ -17,6 +17,6 @@ class TicketsController < ApplicationController
   private
 
   def get_ticket
-    @ticket = Ticket.find(params.require(:id))
+    @ticket = Ticket.friendly.find(params.require(:id))
   end
 end
