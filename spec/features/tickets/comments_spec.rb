@@ -4,7 +4,7 @@ feature 'Ticket comments' do
     @ticket = FactoryGirl.create :ticket
   end
 
-  content 'when user is not logged in' do
+  context 'when user is not logged in' do
 
     before do
       visit ticket_path(@ticket)
@@ -32,8 +32,8 @@ feature 'Ticket comments' do
     context 'and the user adds a comment with content and email' do
 
       before do
-        fill_in :text, with: 'some stuff about this ticket'
-        fill_in :email, with: 'whoever@somehwere.com'
+        fill_in :ticket_comments_attributes_0_text, with: 'some stuff about this ticket'
+        fill_in :ticket_comments_attributes_0_email, with: 'someemail@fortheticket.com'
         click_on 'Add comment'
         @ticket.reload
       end
@@ -48,12 +48,12 @@ feature 'Ticket comments' do
       end
 
       it 'should add not logged in details to the comment' do
-        expect(@ticket.comments.first.email).to eq 'whoever@somehwere.com'
+        expect(@ticket.comments.first.email).to eq 'someemail@fortheticket.com'
         expect(@ticket.comments.first.user).to be_nil
       end
 
       it 'should not notify the customer of a new comment' do
-        expect(last_email.to.first).to be_nil
+        expect(delivered_emails.second).to be_nil
       end
 
     end    
@@ -90,7 +90,7 @@ feature 'Ticket comments' do
     context 'and the user adds a comment with content' do
 
       before do
-        fill_in :text, with: 'some stuff about this ticket'
+        fill_in :ticket_comments_attributes_0_text, with: 'some stuff about this ticket'
         click_on 'Add comment'
         @ticket.reload
       end
@@ -109,10 +109,11 @@ feature 'Ticket comments' do
       end
 
       it 'should notify the customer of a new comment' do
-        expect(last_email.to.first).to eq 'someuser@where.com'
-        expect(last_email.subject.to_s).to include 'Your ticket has a new comment'
-        expect(last_email.body.to_s).to include ticket_path(@ticket)
-        expect(last_email.body.to_s).to include 'http://'
+        expect(delivered_emails.second).to_not be_nil
+        expect(delivered_emails.second.to.first).to eq 'someemail@fortheticket.com'
+        expect(delivered_emails.second.subject.to_s).to include 'Your ticket has a new comment'
+        expect(delivered_emails.second.body.to_s).to include ticket_path(@ticket)
+        expect(delivered_emails.second.body.to_s).to include 'http://'
       end
 
     end
