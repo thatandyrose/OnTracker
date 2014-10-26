@@ -1,5 +1,8 @@
 class Ticket < ActiveRecord::Base
   belongs_to :user
+  has_many :comments
+
+  accepts_nested_attributes_for :comments
 
   validates_presence_of :email
 
@@ -10,6 +13,10 @@ class Ticket < ActiveRecord::Base
   friendly_id :generate_reference, use: :slugged
 
   after_create :notify_create
+
+  def self.user_name(email)
+    where('email = ? and name is not null', email).first.try(:name)
+  end
 
   def generate_reference
     sr = SecureRandom

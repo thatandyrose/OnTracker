@@ -6,4 +6,12 @@ class CustomerMailer < ActionMailer::Base
     @name = @ticket.name.present? ? @ticket.name : @ticket.email
     mail to: @ticket.email, subject: "Your ticket has been received. Thanks!"
   end
+
+  def comment_create(comment)
+    @ticket = comment.ticket
+    @comment = comment
+    
+    @name = @ticket.name.present? ? @ticket.name : @ticket.email
+    mail to: @ticket.email, subject: "Your ticket has a new comment!"
+  end
 end

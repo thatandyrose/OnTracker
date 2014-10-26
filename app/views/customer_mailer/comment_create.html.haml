@@ -1,0 +1,8 @@
+%p Hi #{@name}
+
+%p Your ticket has a new comment from #{@comment.submitter_name} (#{@comment.submitter_email}).
+
+%p Click on the link below to track your ticket:
+
+%p
+  %a{href: ticket_path(@ticket, only_path: false)}= ticket_path(@ticket, only_path: false)

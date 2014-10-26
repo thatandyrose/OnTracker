@@ -1,0 +1,4 @@
+-if target.errors.any?
+  .alert.alert-danger
+    - target.errors.each do |attr,msg|
+      %p= msg
