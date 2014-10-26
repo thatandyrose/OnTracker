@@ -16,6 +16,7 @@ gem 'haml-rails'
 gem 'pg'
 gem 'thin'
 gem 'friendly_id', '~> 5.0.0'
+gem 'string-utils'
 
 group :development do
   gem 'better_errors'

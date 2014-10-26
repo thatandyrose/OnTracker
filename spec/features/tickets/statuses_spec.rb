@@ -7,13 +7,12 @@ feature 'Ticket statuses' do
   context 'when you set the status to cancelled or completed' do
 
     it 'should close the ticket if status is cancelled' do
-      @ticket.update_attributes! ticket_status: :cancelled
-
+      @ticket.update_attributes! status_key: :cancelled
       expect(@ticket.is_open?).to be_falsey
     end
 
     it 'should close the ticket if status is completed' do
-      @ticket.update_attributes! ticket_status: :completed
+      @ticket.update_attributes! status_key: :completed
 
       expect(@ticket.is_open?).to be_falsey
     end
@@ -23,7 +22,7 @@ feature 'Ticket statuses' do
   context 'when you create a ticket' do
 
     it 'should have a Waiting for Staff Response status' do
-      expect(@ticket.status.label).to eq 'Waiting for Staff Response'
+      expect(@ticket.status.label).to eq 'Waiting For Staff Response'
     end
 
     it 'should have be open' do
@@ -46,7 +45,7 @@ feature 'Ticket statuses' do
     end
 
     it 'should change the status to Waiting for Customer Response' do
-      expect(@ticket.status.label).to eq 'Waiting for Customer Response'
+      expect(@ticket.status.label).to eq 'Waiting For Customer Response'
     end
   end
 
@@ -62,7 +61,7 @@ feature 'Ticket statuses' do
     end
 
     it 'should change the status to Waiting for Staff Response' do
-      expect(@ticket.status.label).to eq 'Waiting for Staff Response'
+      expect(@ticket.status.label).to eq 'Waiting For Staff Response'
     end
   end
 
@@ -76,7 +75,7 @@ feature 'Ticket statuses' do
     end
 
     it 'should let me change the status to on hold' do
-      select 'On Hold', from: :ticket_status
+      select 'On Hold', from: :ticket_status_key
       click_on 'Update ticket'
       @ticket.reload
 
@@ -121,25 +120,26 @@ feature 'Ticket statuses' do
 
     context 'creating new statuses' do
 
-      it 'should validate missing values' do
+      before do
         visit statuses_path
-
         click_on 'Add new status'
+      end
 
-        expect(page).to have_content 'Label missing'
+      it 'should validate missing values' do
+        click_on 'Save status'
+
+        expect(page).to have_content 'Key or label required.'
       end 
 
       it 'should create new status' do
-        click_on 'Add new status'
-        fill_in :label, with: 'My new status'
+        fill_in :status_label, with: 'My new status'
         click_on 'Save status'
         
-        expect(current_path).to eq statuse_path
+        expect(current_path).to eq statuses_path
 
-        new_status = Status.first
+        new_status = Status.last
         expect(new_status.label).to eq 'My new status'
         expect(new_status.key).to eq 'my_new_status'
-        expect(new_status.is_system).to be_falsey
       end      
 
     end
@@ -147,13 +147,11 @@ feature 'Ticket statuses' do
     context 'edit status' do
 
       before do
-        Status.create_for_system!
-        
         @status = Status.find_by_key('waiting_for_staff_response')
         
-        visit status_path(@status)
+        visit edit_status_path(@status)
 
-        fill_in :label, with: 'A brand new name'
+        fill_in :status_label, with: 'A brand new name'
         click_on 'Save status'
 
         @status.reload
@@ -162,7 +160,6 @@ feature 'Ticket statuses' do
       it 'should change the label but not the other values' do
         expect(@status.label).to eq 'A brand new name'
         expect(@status.key).to eq 'waiting_for_staff_response'
-        expect(@status.is_system).to be_truthy
       end
 
     end

@@ -1,6 +1,9 @@
 class Ticket < ActiveRecord::Base
   belongs_to :user
   has_many :comments
+  belongs_to :status
+
+  attr_accessor :status_key
 
   accepts_nested_attributes_for :comments
 
@@ -13,6 +16,8 @@ class Ticket < ActiveRecord::Base
   friendly_id :generate_reference, use: :slugged
 
   after_create :notify_create
+  before_save :set_status
+  after_initialize :set_defaults
 
   def self.user_name(email)
     where('email = ? and name is not null', email).first.try(:name)
@@ -30,7 +35,11 @@ class Ticket < ActiveRecord::Base
   end
 
   def is_open?
-    user_id.nil?
+    self.status.nil? || (self.status && !['cancelled', 'completed'].include?(self.status.key.to_s))
+  end
+
+  def is_assigned?
+    self.user_id.present?
   end
 
   def take_ownership! owner
@@ -40,5 +49,19 @@ class Ticket < ActiveRecord::Base
 
   def notify_create
     CustomerMailer.ticket_create(self).deliver
+  end
+
+  private
+
+  def set_defaults    
+    if self.status
+      self.status_key = self.status.key
+    else
+      self.status_key ||= :waiting_for_staff_response
+    end
+  end
+
+  def set_status
+    self.status = Status.find_or_create_by!(key: status_key) if self.status_key.present?
   end
 end

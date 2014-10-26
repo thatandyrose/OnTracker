@@ -1,0 +1,18 @@
+%h1 Statuses
+%p= link_to 'Add new status', new_status_path, class: 'btn btn-lg btn-primary'
+%table.table
+  %thead
+    %tr
+      %th id
+      %th key
+      %th label
+      %th created
+      %th
+  %tbody
+    - @statuses.each do |status|
+      %tr
+        %td= status.id
+        %td= status.key
+        %td= status.label
+        %td #{time_ago_in_words(status.created_at)} ago
+        %td= link_to 'Edit', edit_status_path(status), class: 'btn btn-lg btn-primary'

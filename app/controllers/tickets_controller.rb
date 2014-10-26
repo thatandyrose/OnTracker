@@ -32,6 +32,10 @@ class TicketsController < ApplicationController
   end
 
   def strong_params
-    params.require(:ticket).permit comments_attributes:[:email, :text, :user_id]
+    if current_user
+      params.require(:ticket).permit :status_key, comments_attributes:[:email, :text, :user_id]
+    else
+      params.require(:ticket).permit comments_attributes:[:email, :text, :user_id]
+    end
   end
 end
