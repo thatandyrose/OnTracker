@@ -1,6 +1,9 @@
 class TicketsController < ApplicationController
-  before_action :authenticate_user!, except: [:show, :update]
+  before_action :authenticate_user!, except: [:show, :update, :docs]
   before_action :get_ticket, only: [:own, :show, :update]
+
+  def docs
+  end
 
   def index
     @tickets = Ticket.all
