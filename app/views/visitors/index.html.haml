@@ -1,0 +1,9 @@
+.jumbotron
+  %h1
+    %i.fa-ticket
+  %h1 OnTracker
+  .lead Ticket tracking for humans (who like APIs).
+  %p
+    - if user_signed_in?
+      = link_to 'See open tickets', open_tickets_path, class: 'btn btn-lg btn-primary'
+    = link_to 'Check out the API docs', docs_tickets_path, class: 'btn btn-lg btn-primary'

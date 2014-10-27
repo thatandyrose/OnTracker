@@ -17,6 +17,7 @@ gem 'pg'
 gem 'thin'
 gem 'friendly_id', '~> 5.0.0'
 gem 'string-utils'
+gem 'font-awesome-rails'
 
 group :development do
   gem 'better_errors'

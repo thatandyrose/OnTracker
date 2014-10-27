@@ -1,0 +1,20 @@
+%h1 Api docs
+%p Implement our APIs to create tickets from your app!
+
+.panel.panel-default
+  .panel-heading
+    .panel-title
+      Create
+  .panel-body
+    %h3
+      %code post /api/v1/tickets, {:subject, :body, :name, :email}
+    
+    %h3 Required Parameters
+    %ul
+      %li <code>:password</code>
+
+    %h3 Example
+    %code post /api/v1/tickets, {subject: 'my subject', body: 'an issue', name: 'andy', email: 'andy@internet.com'}
+
+    %h3 Response
+    %code {"reference": 'hyg-4d-hyu-38-vqq'}
