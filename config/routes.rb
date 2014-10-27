@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     get :closed, on: :collection
     get :unassigned, on: :collection
     get 'status/:status_key', on: :collection, action: :status, as: :status
+    get :search, on: :collection
     get :own, on: :member
   end
 

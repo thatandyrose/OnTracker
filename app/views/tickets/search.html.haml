@@ -1,0 +1,6 @@
+.jumbotron
+  = form_tag search_tickets_path, method: 'GET', class: 'form-inline' do
+    .form-group
+      = text_field_tag :query, params[:query], class: 'form-control'
+      = submit_tag 'Search', class: 'btn btn-lg btn-primary'
+= render 'tickets'
