@@ -1,13 +1,23 @@
 module ApplicationHelper
   def statues_for_select
-    defaults = [
-      :waiting_for_staff_response,
-      :waiting_for_customer_response,
-      :on_hold,
-      :cancelled,
-      :completed
-    ]
+    (Status.default_status_keys + Status.pluck(:key))
+    .uniq
+    .map{ |key| [key.to_s.titleize, key] }
+  end
 
-    (defaults + Status.pluck(:key)).uniq.map{ |key| [key.to_s.titleize, key] }
+  def ticket_open_label(ticket)
+    
+    content_tag(:span, class: "label label-#{ticket.is_open? ? 'success' : 'danger'}") do
+      "#{ticket.is_open? ? 'open' : 'closed'}"
+    end
+
+  end
+
+  def ticket_status_label(ticket)
+    
+    content_tag(:span, class: 'label label-primary') do
+      ticket.status.try(:label)
+    end
+
   end
 end

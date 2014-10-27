@@ -9,6 +9,9 @@ Rails.application.routes.draw do
 
   resources :tickets do
     get :open, on: :collection
+    get :closed, on: :collection
+    get :unassigned, on: :collection
+    get 'status/:status_key', on: :collection, action: :status, as: :status
     get :own, on: :member
   end
 

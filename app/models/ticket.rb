@@ -10,7 +10,9 @@ class Ticket < ActiveRecord::Base
   validates_presence_of :email
 
   default_scope { order(created_at: :desc) }
-  scope :open, ->{ where(user_id:nil) }
+  scope :open, ->{ joins(:status).where('status_id is null or (status_id is not null and statuses.key not in (?))', Status.closed_status_keys) }
+  scope :closed, ->{ joins(:status).where('status_id is not null and statuses.key in (?)', Status.closed_status_keys) }
+  scope :unassigned, ->{ where(user_id:nil) }
 
   include FriendlyId
   friendly_id :generate_reference, use: :slugged
@@ -18,6 +20,10 @@ class Ticket < ActiveRecord::Base
   after_create :notify_create
   before_save :set_status
   after_initialize :set_defaults
+
+  def self.for_status(status_key)
+    joins(:status).where(statuses: { key: status_key })
+  end
 
   def self.user_name(email)
     where('email = ? and name is not null', email).first.try(:name)
@@ -35,7 +41,7 @@ class Ticket < ActiveRecord::Base
   end
 
   def is_open?
-    self.status.nil? || (self.status && !['cancelled', 'completed'].include?(self.status.key.to_s))
+    self.status.nil? || (self.status && !Status.closed_status_keys.include?(self.status.key.to_s))
   end
 
   def is_assigned?

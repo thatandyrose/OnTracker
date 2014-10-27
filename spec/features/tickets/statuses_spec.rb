@@ -76,7 +76,7 @@ feature 'Ticket statuses' do
 
     it 'should let me change the status to on hold' do
       select 'On Hold', from: :ticket_status_key
-      click_on 'Update ticket'
+      click_on 'Update status'
       @ticket.reload
 
       expect(@ticket.status.key).to eq 'on_hold'

@@ -2,8 +2,26 @@ class TicketsController < ApplicationController
   before_action :authenticate_user!, except: [:show, :update]
   before_action :get_ticket, only: [:own, :show, :update]
 
+  def index
+    @tickets = Ticket.all
+  end
+
   def open
     @tickets = Ticket.open
+  end
+
+  def closed
+    @tickets = Ticket.closed
+  end
+
+  def unassigned
+    @tickets = Ticket.unassigned
+  end
+
+  def status
+    key = params.require(:status_key)
+    @status = Status.find_by_key key
+    @tickets = Ticket.for_status key
   end
 
   def own
