@@ -1,50 +1,45 @@
-Ontracker
-================
+# Secretnotes
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+## What you need to know
 
-This application was generated with the [rails_apps_composer](https://github.com/RailsApps/rails_apps_composer) gem
-provided by the [RailsApps Project](http://railsapps.github.io/).
+- This is a Ruby on Rails application
+- This application was generated with the [rails_apps_composer](https://github.com/RailsApps/rails_apps_composer) gem
+- It requires ruby 2.1.2
+- It requires rails 4.1.5
+- There is one test which requires the selenium driver, so the latest version of Firefox is required.
+- Data store is postgres
+- It's tested with Rspec and capybara
 
-Rails Composer is open source and supported by subscribers. Please join RailsApps to support development of Rails Composer.
+## Great! But what is it?
 
-Problems? Issues?
------------
+This is a simple Ticket tracking app.
 
-Need help? Ask on Stack Overflow with the tag 'railsapps.'
+It allows authenticated users to:
 
-Your application contains diagnostics in the README file. Please provide a copy of the README file when reporting any issues.
+- views open, close, unassigned, by status tickets.
+- search tickets by subject, email, body, reference.
+- change ticket statuses.
+- take ownership of tickets.
+- comment on tickets.
 
-If the application doesn’t work as expected, please [report an issue](https://github.com/RailsApps/rails_apps_composer/issues)
-and include the diagnostics.
+Non authenticated users can only view tickets, and comment on them.
 
-Ruby on Rails
--------------
+## Can I get more details on the implementation of this app please?
 
-This application requires:
+Sure! More thorough info the choices for this app can be found in the descriptice Pull Requests!
 
-- Ruby 2.1.2
-- Rails 4.1.5
+[Pull Requests](https://github.com/thatandyrose/OnTracker/pulls?q=is%3Apr+is%3Aclosed)
 
-Learn more about [Installing Rails](http://railsapps.github.io/installing-rails.html).
+## Cool, is this continoulsly integrated?
 
-Getting Started
----------------
+Not yet
 
-Documentation and Support
--------------------------
+## Oh, is it deployed at least?
 
-Issues
--------------
+Nope.
 
-Similar Projects
-----------------
+## How the heck do I create new tickets?
 
-Contributing
-------------
+Glad you asked! Check out the API docs, you can get to the via the landing page.
 
-Credits
--------
-
-License
--------
+url
