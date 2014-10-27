@@ -14,8 +14,12 @@
     .panel.panel-default.activity
       .panel-heading
         .panel-title
-          %span.label.label-default= @ticket.department
-          %small reference: #{@ticket.reference}
+          .pull-left
+            %span.label.label-default= @ticket.department
+            %small reference: #{@ticket.reference}
+          .pull-right
+            %span.label.label-default= @ticket.status.try(:label)
+          .clearfix
       .panel-body     
         %blockquote
           %p= @ticket.body
