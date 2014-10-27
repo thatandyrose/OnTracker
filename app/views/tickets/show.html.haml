@@ -1,25 +1,36 @@
 %h1= @ticket.subject
 
-.panel.panel-default.activity
-  .panel-heading
-    .panel-title
-      %span.label.label-default= @ticket.department
-      %small reference: #{@ticket.reference}
-  .panel-body     
-    %blockquote
-      %p= @ticket.body
-  .panel-footer
-    %small
-      .pull-left
-        ticket submitted by <strong>#{@ticket.name} (#{@ticket.email})</strong> #{time_ago_in_words(@ticket.created_at)} ago
-      .pull-right
-        - if current_user && @ticket.is_open?
-          = render 'own_button', ticket: @ticket
-        - else
-          - if @ticket.user
-            %strong owner: 
-            = @ticket.user.email
-      .clearfix
+.row
+  - if current_user
+    .col-md-3
+      .panel.panel-default.activity
+        .panel-body
+          = form_for @ticket do |f|
+            .form-group
+              = f.label :status_key
+              = f.select :status_key, [['Select status','']] + statues_for_select, {}, class: 'form-control'
+            = f.submit 'Update ticket', class: 'btn btn-primary'
+  %div{class: current_user ? "col-md-9" : "col-md-12"}
+    .panel.panel-default.activity
+      .panel-heading
+        .panel-title
+          %span.label.label-default= @ticket.department
+          %small reference: #{@ticket.reference}
+      .panel-body     
+        %blockquote
+          %p= @ticket.body
+      .panel-footer
+        %small
+          .pull-left
+            ticket submitted by <strong>#{@ticket.name} (#{@ticket.email})</strong> #{time_ago_in_words(@ticket.created_at)} ago
+          .pull-right
+            - if current_user && @ticket.is_open?
+              = render 'own_button', ticket: @ticket
+            - else
+              - if @ticket.user
+                %strong owner: 
+                = @ticket.user.email
+          .clearfix
 
 - @ticket.comments.each do |comment|
   .connector
@@ -43,4 +54,4 @@
             .form-group
               = b.text_area :text, class: 'form-control', placeholder: 'your comment'
         .panel-footer
-          = f.submit 'Add comment', class: 'btn btn-large btn-primary'
+          = f.submit 'Add comment', class: 'btn btn-lg btn-primary'

@@ -35,7 +35,6 @@ img {
 // to make views framework-neutral
 main {
   @extend .container;
-  width: 100%;
   margin-top: 51px; // accommodate the navbar
   }
 section {
@@ -84,7 +83,7 @@ section {
 }
 
 .connector{
-  margin-left: 50px;
+  margin-right: 50px;
   height: 30px;
-  border-left: #ccc dotted 1px;
+  border-right: #ccc dotted 1px;
 }

@@ -11,4 +11,6 @@ Rails.application.routes.draw do
     get :open, on: :collection
     get :own, on: :member
   end
+
+  resources :statuses
 end

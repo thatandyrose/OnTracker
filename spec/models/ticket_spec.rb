@@ -1,5 +1,7 @@
 feature Ticket do
+  
   context 'when you create a ticket' do
+    
     before do
       @ticket = Ticket.create! email: 'someuser@where.com'
     end
@@ -15,5 +17,7 @@ feature Ticket do
       expect(last_email.body.to_s).to include ticket_path(@ticket)
       expect(last_email.body.to_s).to include 'http://'
     end
+
   end
+
 end
