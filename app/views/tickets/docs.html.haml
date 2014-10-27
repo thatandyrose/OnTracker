@@ -4,7 +4,7 @@
 .panel.panel-default
   .panel-heading
     .panel-title
-      Create
+      Create ticket
   .panel-body
     %h3
       %code post /api/v1/tickets, {:subject, :body, :name, :email}
@@ -18,3 +18,21 @@
 
     %h3 Response
     %code {"reference": 'hyg-4d-hyu-38-vqq'}
+
+.panel.panel-default
+  .panel-heading
+    .panel-title
+      List deparments
+  .panel-body
+    %h3
+      %code get /api/v1/departments
+    
+    %h3 Required Parameters
+    %ul
+      %li none
+
+    %h3 Example
+    %code get /api/v1/departments
+
+    %h3 Response
+    %code ['Sales', 'Marketing']
