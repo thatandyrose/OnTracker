@@ -24,6 +24,14 @@ class TicketsController < ApplicationController
     @tickets = Ticket.for_status key
   end
 
+  def search
+    @tickets = []
+
+    if params[:query]
+      @tickets = Ticket.search params[:query]
+    end
+  end
+
   def own
     @ticket.take_ownership! current_user
     redirect_to ticket_path(@ticket)

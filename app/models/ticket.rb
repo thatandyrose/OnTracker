@@ -29,6 +29,11 @@ class Ticket < ActiveRecord::Base
     where('email = ? and name is not null', email).first.try(:name)
   end
 
+  def self.search(query)
+    Ticket
+    .where 'email like :query or subject like :query or body like :query or slug like :query', query: "%#{query}%"
+  end
+
   def generate_reference
     sr = SecureRandom
     chrs = 3.times.map{ sr.urlsafe_base64(2) }
