@@ -1,0 +1,8 @@
+deployment:
+  production:
+    branch: master
+    commands:
+      - '[[ ! -s "$(git rev-parse --git-dir)/shallow" ]] || git fetch --unshallow'
+
+      - git push -f git@heroku.com:ontracker.git $CIRCLE_SHA1:master
+      - heroku run bundle exec rake db:migrate --trace --app ontracker

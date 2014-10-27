@@ -1,4 +1,4 @@
-# Secretnotes
+# [OnTracker](http://ontracker.herokuapp.com)
 
 ## What you need to know
 
@@ -32,14 +32,14 @@ Sure! More thorough info the choices for this app can be found in the descriptic
 
 ## Cool, is this continoulsly integrated?
 
-Not yet
+Yes! It's on [CircleCI](https://circleci.com/gh/thatandyrose/OnTracker)
 
-## Oh, is it deployed at least?
+## Saweet, is it deployed also?
 
-Nope.
+YES! (http://ontracker.herokuapp.com)[http://ontracker.herokuapp.com]
 
 ## How the heck do I create new tickets?
 
 Glad you asked! Check out the API docs, you can get to the via the landing page.
 
-url
+[http://ontracker.herokuapp.com](http://ontracker.herokuapp.com)
