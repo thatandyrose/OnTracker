@@ -17,4 +17,11 @@ Rails.application.routes.draw do
   end
 
   resources :statuses
+
+  namespace :api do
+    namespace :v1 do
+      resources :tickets, only: [:create]
+      resources :departments, only: [:index]
+    end
+  end
 end
