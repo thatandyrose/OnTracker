@@ -28,7 +28,7 @@
           .pull-left
             ticket submitted by <strong>#{@ticket.name} (#{@ticket.email})</strong> #{time_ago_in_words(@ticket.created_at)} ago
           .pull-right
-            - if current_user && @ticket.is_open?
+            - if current_user && !@ticket.is_assigned?
               = render 'own_button', ticket: @ticket
             - else
               - if @ticket.user
