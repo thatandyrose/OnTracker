@@ -1,4 +1,4 @@
-describe Api::V1::DepartmentController do
+describe Api::V1::DepartmentsController do
   render_views
 
   context 'list departments' do
