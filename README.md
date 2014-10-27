@@ -36,10 +36,10 @@ Yes! It's on [CircleCI](https://circleci.com/gh/thatandyrose/OnTracker)
 
 ## Saweet, is it deployed also?
 
-YES! (http://ontracker.herokuapp.com)[http://ontracker.herokuapp.com]
+YES! [http://ontracker.herokuapp.com](http://ontracker.herokuapp.com)
 
 ## How the heck do I create new tickets?
 
-Glad you asked! Check out the API docs, you can get to the via the landing page.
+Glad you asked! Check out the API docs, you can get to them via the landing page.
 
 [http://ontracker.herokuapp.com](http://ontracker.herokuapp.com)
