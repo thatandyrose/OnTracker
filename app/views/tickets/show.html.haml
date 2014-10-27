@@ -7,9 +7,8 @@
         .panel-body
           = form_for @ticket do |f|
             .form-group
-              = f.label :status_key
               = f.select :status_key, [['Select status','']] + statues_for_select, {}, class: 'form-control'
-            = f.submit 'Update ticket', class: 'btn btn-primary'
+            = f.submit 'Update status', class: 'btn btn-primary'
   %div{class: current_user ? "col-md-9" : "col-md-12"}
     .panel.panel-default.activity
       .panel-heading
@@ -18,7 +17,8 @@
             %span.label.label-default= @ticket.department
             %small reference: #{@ticket.reference}
           .pull-right
-            %span.label.label-default= @ticket.status.try(:label)
+            = ticket_status_label(@ticket)
+            = ticket_open_label(@ticket)
           .clearfix
       .panel-body     
         %blockquote

@@ -4,24 +4,6 @@ feature 'Ticket Ownership' do
     signin(@user.email, @user.password)
   end
 
-  context 'when listing' do
-    
-    it 'should list open tickets' do
-      FactoryGirl.create :ticket, subject: 'some open ticket'
-      visit open_tickets_path
-
-      expect(page).to have_content 'some open ticket'
-    end
-
-    it 'not list owned tickets' do
-      FactoryGirl.create :ticket, subject: 'some owned ticket', user: @user
-      visit open_tickets_path
-
-      expect(page).to_not have_content 'some owned ticket'
-    end
-
-  end
-
   context 'when taking ownership' do
 
     before do

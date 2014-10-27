@@ -1,0 +1,29 @@
+.row
+  .col-md-2
+    %ul.nav.nav-pills.nav-stacked
+      %li= link_to 'Unassigned', unassigned_tickets_path
+      %li= link_to 'Open', open_tickets_path
+      %li= link_to 'On Hold', status_tickets_path(:on_hold)
+      %li= link_to 'Closed', closed_tickets_path
+  .col-md-10
+    %table.table
+      %thead
+        %tr
+          %th id
+          %th department
+          %th subject
+          %th status
+          %th created
+          %th
+      %tbody
+        - @tickets.each do |ticket|
+          %tr.ticket-row
+            %td
+              %a{href: ticket_path(ticket)}= ticket.slug
+            %td= ticket.department
+            %td= ticket.subject
+            %td #{ticket_status_label(ticket)} #{ticket_open_label(ticket)}
+            %td #{time_ago_in_words(ticket.created_at)} ago
+            %td
+              - if !ticket.is_assigned?
+                = render 'own_button', ticket: ticket
