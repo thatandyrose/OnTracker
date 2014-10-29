@@ -19,10 +19,7 @@ class Ticket < ActiveRecord::Base
   friendly_id :generate_reference, use: :slugged
 
   after_initialize :set_defaults
-
-  before_create :build_activity
-  before_save :set_status
-
+  before_save :handle_activities, :set_status
   after_create :notify_create
 
   def self.for_status(status_key)
@@ -39,10 +36,7 @@ class Ticket < ActiveRecord::Base
   end
 
   def generate_reference
-    sr = SecureRandom
-    chrs = 3.times.map{ sr.urlsafe_base64(2) }
-    hxs = 2.times.map{ sr.hex(1) }
-    "#{chrs[0]}-#{hxs[0]}-#{chrs[1]}-#{hxs[1]}-#{chrs[2]}"
+    SecureRandom.uuid
   end
 
   def reference
@@ -70,46 +64,51 @@ class Ticket < ActiveRecord::Base
 
   private
 
+  def handle_activities
+    
+    if self.new_record?
+      build_activity activity_type: :create, user_name: (self.name.present? ? self.name : self.email)
+    else
+
+      if self.status_key.present?
+
+        current_status_key = self.status.try(:key)
+        new_status = Status.find_or_create_by!(key: self.status_key.to_s)
+
+        if current_status_key != new_status.key
+
+          build_activity(activity_type: :status_change, user_name: self.current_user_name)
+
+          build_activity(activity_type: :close, user_name: self.current_user_name) if self.is_open? && Status.closed_status_keys.include?(new_status.key)
+          build_activity(activity_type: :open, user_name: self.current_user_name) if !self.is_open? && !Status.closed_status_keys.include?(new_status.key)
+
+        end
+
+      end
+
+    end
+
+  end
+
   def set_defaults    
+    
     if self.status
       self.status_key = self.status.key
     else
       self.status_key ||= :waiting_for_staff_response
     end
+
   end
 
-  def build_activity
-    activity = self.activities.build activity_type: :create, user_name: (self.name.present? ? self.name : self.email)
+  def build_activity(atrributes)
+    activity = self.activities.build atrributes
     raise "Activity not valid: #{activity.errors.messages}" if !activity.valid?
   end
 
   def set_status
     
-    if self.status_key.present?
-
-      current_status_key = self.status.try(:key)
-      new_status = Status.find_or_create_by!(key: self.status_key.to_s)
-      
-      if current_status_key != new_status.key
-        
-        if self.persisted?
-          self.activities.build activity_type: :status_change, user_name: self.current_user_name
- 
-          if self.is_open? && Status.closed_status_keys.include?(new_status.key)
-            activity = self.activities.build activity_type: :close, user_name: self.current_user_name          
-          end
-
-          if !self.is_open? && !Status.closed_status_keys.include?(new_status.key)
-            activity = self.activities.build activity_type: :open, user_name: self.current_user_name          
-          end
-
-          raise "Activity not valid: #{activity.errors.messages}" if activity && !activity.valid?
-        end
-
-        self.status = new_status
-
-      end
-
-    end
+    self.status = Status.find_or_create_by!(key: self.status_key.to_s) if self.status_key.present?
+    
   end
+
 end
