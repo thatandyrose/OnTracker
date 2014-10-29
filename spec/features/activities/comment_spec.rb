@@ -25,8 +25,8 @@ feature 'Comment activities' do
         expect(Activity.where(activity_type: :create).count).to eq 2
         expect(Activity.where(activity_type: :create).where('comment_id is not null').count).to eq 1
         
-        expect(Activity.where(activity_type: :create).where(comment_id: Comment.first.id).ticket).to eq @ticket
-        expect(Activity.where(activity_type: :create).where(comment_id: Comment.first.id).comment).to eq Comment.first
+        expect(Activity.where(activity_type: :create).where(comment_id: Comment.first.id).first.ticket).to eq @ticket
+        expect(Activity.where(activity_type: :create).where(comment_id: Comment.first.id).first.comment).to eq Comment.first
       end
 
       it 'should create a new status change activity' do
@@ -50,7 +50,7 @@ feature 'Comment activities' do
     context 'and creates a new comment' do
 
       before do
-        @ticket.update_attributes! statue_key: 'on_hold'
+        @ticket.update_attributes! status_key: 'on_hold'
         Activity.destroy_all
 
         fill_in :ticket_comments_attributes_0_text, with: 'some stuff about this ticket'
@@ -62,8 +62,8 @@ feature 'Comment activities' do
         expect(Activity.count).to eq 2
         expect(Activity.where(activity_type: :create).count).to eq 1
         
-        expect(Activity.where(comment_id: Comment.first.id).ticket).to eq @ticket
-        expect(Activity.where(comment_id: Comment.first.id).comment).to eq Comment.first
+        expect(Activity.where(comment_id: Comment.first.id).first.ticket).to eq @ticket
+        expect(Activity.where(comment_id: Comment.first.id).first.comment).to eq Comment.first
       end
 
       it 'should create a new status change activity' do

@@ -35,7 +35,7 @@ feature 'Ticket activities' do
         click_on 'Own!'
       end
 
-      it 'should create a own actvity for the ticket' do
+      it 'should create an own actvity for the ticket' do
         expect(Activity.count).to eq 2
         expect(Activity.last.activity_type).to eq 'own'
         expect(Activity.first.ticket).to eq @ticket
@@ -80,7 +80,7 @@ feature 'Ticket activities' do
         expect(Activity.where(activity_type: :status_change).count).to eq 1
         
         expect(Activity.find_by_activity_type(:status_change).ticket).to eq @ticket
-        expect(Activity.find_by_activity_type(:status_change).user_name).to 'Test User'
+        expect(Activity.find_by_activity_type(:status_change).user_name).to eq 'Test User'
       end
 
       it 'should create a close activity for the ticket' do
@@ -88,7 +88,7 @@ feature 'Ticket activities' do
         expect(Activity.where(activity_type: :close).count).to eq 1
         
         expect(Activity.find_by_activity_type(:close).ticket).to eq @ticket
-        expect(Activity.find_by_activity_type(:close).user_name).to 'Test User'
+        expect(Activity.find_by_activity_type(:close).user_name).to eq 'Test User'
       end
 
       it 'should show the activities on the page' do
@@ -111,19 +111,18 @@ feature 'Ticket activities' do
       end
 
       it 'should create a status change actvity for the ticket' do
-        expect(Activity.count).to eq 3
+        expect(Activity.count).to eq 2
         expect(Activity.where(activity_type: :status_change).count).to eq 1
         
         expect(Activity.find_by_activity_type(:status_change).ticket).to eq @ticket
-        expect(Activity.find_by_activity_type(:status_change).user_name).to 'Test User'
+        expect(Activity.find_by_activity_type(:status_change).user_name).to eq 'Test User'
       end
 
       it 'should create a close activity for the ticket' do
-        expect(Activity.count).to eq 3
         expect(Activity.where(activity_type: :open).count).to eq 1
         
         expect(Activity.find_by_activity_type(:open).ticket).to eq @ticket
-        expect(Activity.find_by_activity_type(:open).user_name).to 'Test User'
+        expect(Activity.find_by_activity_type(:open).user_name).to eq 'Test User'
       end
 
       it 'should show the activities on the page' do

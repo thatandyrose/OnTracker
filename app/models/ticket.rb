@@ -59,7 +59,9 @@ class Ticket < ActiveRecord::Base
 
   def take_ownership! owner
     self.user = owner
-    self.save!
+    self.activities.create! activity_type: :own, user_name: self.user.user_name 
+    
+    self.save!    
   end
 
   def notify_create
@@ -84,23 +86,28 @@ class Ticket < ActiveRecord::Base
   def set_status
     
     if self.status_key.present?
+
       current_status_key = self.status.try(:key)
-      new_status = Status.find_or_create_by!(key: status_key)
+      new_status = Status.find_or_create_by!(key: self.status_key.to_s)
       
       if current_status_key != new_status.key
-        self.activities.build activity_type: :status_change, user_name: self.current_user_name
+        
+        if self.persisted?
+          self.activities.build activity_type: :status_change, user_name: self.current_user_name
+ 
+          if self.is_open? && Status.closed_status_keys.include?(new_status.key)
+            activity = self.activities.build activity_type: :close, user_name: self.current_user_name          
+          end
 
-        if self.is_open? && Status.closed_status_keys.include?(new_status.key)
-          activity = self.activities.build activity_type: :close, user_name: self.current_user_name          
+          if !self.is_open? && !Status.closed_status_keys.include?(new_status.key)
+            activity = self.activities.build activity_type: :open, user_name: self.current_user_name          
+          end
+
+          raise "Activity not valid: #{activity.errors.messages}" if activity && !activity.valid?
         end
-
-        if !self.is_open? && !Status.closed_status_keys.include?(new_status.key)
-          activity = self.activities.build activity_type: :open, user_name: self.current_user_name          
-        end
-
-        raise "Activity not valid: #{activity.errors.messages}" if activity && !activity.valid?
 
         self.status = new_status
+
       end
 
     end
