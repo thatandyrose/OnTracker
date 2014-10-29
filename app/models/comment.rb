@@ -8,7 +8,7 @@ class Comment < ActiveRecord::Base
 
   default_scope { order(created_at: :asc) }
 
-  before_create :build_activity
+  before_save :handle_activities
   after_create :notify_create, :update_ticket_status
 
   def submitter_name
@@ -37,8 +37,12 @@ class Comment < ActiveRecord::Base
 
   private
 
-  def build_activity
-    activity = self.activities.build activity_type: :create, user_name: self.submitter_name, ticket_id: self.ticket_id
-    raise "Activity not valid: #{activity.errors.messages}" if !activity.valid?
+  def handle_activities
+    
+    if self.new_record?
+      activity = self.activities.build activity_type: :create, user_name: self.submitter_name, ticket_id: self.ticket_id
+      raise "Activity not valid: #{activity.errors.messages}" if !activity.valid?
+    end
+    
   end
 end
