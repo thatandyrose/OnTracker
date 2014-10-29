@@ -11,11 +11,11 @@ class Status < ActiveRecord::Base
 
   def self.default_status_keys
     [
-      :waiting_for_staff_response,
-      :waiting_for_customer_response,
-      :on_hold,
-      :cancelled,
-      :completed
+      'waiting_for_staff_response',
+      'waiting_for_customer_response',
+      'on_hold',
+      'cancelled',
+      'completed'
     ]
   end
 
