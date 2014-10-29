@@ -62,7 +62,7 @@ class TicketsController < ApplicationController
 
   def strong_params
     if current_user
-      params.require(:ticket).permit :status_key, comments_attributes:[:email, :text, :user_id]
+      params.require(:ticket).permit(:status_key, comments_attributes:[:email, :text, :user_id]).merge(current_user_name: (current_user.name.present? ? current_user.name : current_user.email))
     else
       params.require(:ticket).permit comments_attributes:[:email, :text, :user_id]
     end

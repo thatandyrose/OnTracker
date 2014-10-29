@@ -6,5 +6,6 @@ FactoryGirl.define do
     name "someone"
     subject "some subject for the ticket"
     department "some dept for the ticket"
+    current_user_name 'test runner'
   end
 end

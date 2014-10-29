@@ -104,7 +104,7 @@ feature 'Ticket activities' do
         @ticket.update_attributes! status_key: :cancelled
         Activity.destroy_all
 
-        select 'Cancelled', from: :ticket_status_key
+        select 'On Hold', from: :ticket_status_key
         click_on 'Update status'
 
         @ticket.reload
@@ -120,15 +120,15 @@ feature 'Ticket activities' do
 
       it 'should create a close activity for the ticket' do
         expect(Activity.count).to eq 3
-        expect(Activity.where(activity_type: :close).count).to eq 1
+        expect(Activity.where(activity_type: :open).count).to eq 1
         
-        expect(Activity.find_by_activity_type(:close).ticket).to eq @ticket
-        expect(Activity.find_by_activity_type(:close).user_name).to 'Test User'
+        expect(Activity.find_by_activity_type(:open).ticket).to eq @ticket
+        expect(Activity.find_by_activity_type(:open).user_name).to 'Test User'
       end
 
       it 'should show the activities on the page' do
-        expect(page).to have_content 'Test User changed the ticket status to Cancelled'
-        expect(page).to have_content 'Test User closed the ticket'
+        expect(page).to have_content 'Test User changed the ticket status to On Hold'
+        expect(page).to have_content 'Test User opened the ticket'
       end      
 
     end

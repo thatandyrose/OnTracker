@@ -1,9 +1,10 @@
 class Ticket < ActiveRecord::Base
   belongs_to :user
   has_many :comments
+  has_many :activities
   belongs_to :status
 
-  attr_accessor :status_key
+  attr_accessor :status_key, :current_user_name
 
   accepts_nested_attributes_for :comments
 
@@ -17,9 +18,12 @@ class Ticket < ActiveRecord::Base
   include FriendlyId
   friendly_id :generate_reference, use: :slugged
 
-  after_create :notify_create
-  before_save :set_status
   after_initialize :set_defaults
+
+  before_create :build_activity
+  before_save :set_status
+
+  after_create :notify_create
 
   def self.for_status(status_key)
     joins(:status).where(statuses: { key: status_key })
@@ -72,7 +76,33 @@ class Ticket < ActiveRecord::Base
     end
   end
 
+  def build_activity
+    activity = self.activities.build activity_type: :create, user_name: (self.name.present? ? self.name : self.email)
+    raise "Activity not valid: #{activity.errors.messages}" if !activity.valid?
+  end
+
   def set_status
-    self.status = Status.find_or_create_by!(key: status_key) if self.status_key.present?
+    
+    if self.status_key.present?
+      current_status_key = self.status.try(:key)
+      new_status = Status.find_or_create_by!(key: status_key)
+      
+      if current_status_key != new_status.key
+        self.activities.build activity_type: :status_change, user_name: self.current_user_name
+
+        if self.is_open? && Status.closed_status_keys.include?(new_status.key)
+          activity = self.activities.build activity_type: :close, user_name: self.current_user_name          
+        end
+
+        if !self.is_open? && !Status.closed_status_keys.include?(new_status.key)
+          activity = self.activities.build activity_type: :open, user_name: self.current_user_name          
+        end
+
+        raise "Activity not valid: #{activity.errors.messages}" if activity && !activity.valid?
+
+        self.status = new_status
+      end
+
+    end
   end
 end

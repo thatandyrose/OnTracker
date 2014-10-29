@@ -79,13 +79,21 @@ section {
   @extend .btn-xs;
 }
 
+.ticket{
+  margin-bottom: 0px;
+}
+
 .activity{
   margin-bottom: 0px;
+
+  .panel-footer{
+    padding: 5px 15px;
+  }
 }
 
 .connector{
   margin-right: 50px;
-  height: 30px;
+  height: 20px;
   border-right: #ccc dotted 1px;
 }
 

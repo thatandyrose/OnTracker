@@ -3,7 +3,7 @@
 .row
   - if current_user
     .col-md-3
-      .panel.panel-default.activity
+      .panel.panel-default.ticket
         .panel-body
           = form_for @ticket do |f|
             .form-group
@@ -36,26 +36,31 @@
                 = @ticket.user.email
           .clearfix
 
-- @ticket.comments.each do |comment|
+- @ticket.activities.each do |activity|
   .connector
-  - if comment.persisted?
+  - if activity.is_comment?
     .panel.panel-default.activity
       .panel-body
-        %p= comment.text
+        %p= activity.comment.text
       .panel-footer
         %small
-          comment submitted by <strong>#{comment.submitter_name} (#{comment.submitter_email})</strong> #{time_ago_in_words(comment.created_at)} ago
+          comment submitted by <strong>#{activity.comment.submitter_name} (#{activity.comment.submitter_email})</strong> #{time_ago_in_words(activity.comment.created_at)} ago
   - else
-    = form_for @ticket do |f|
-      .panel.panel-default
-        .panel-body
-          = render "shared/error_messages", target: @ticket
-          = f.fields_for :comments, comment do |b|
-            = b.hidden_field :user_id
-            - if current_user.nil?
-              .form-group
-                = b.text_field :email, class: 'form-control', placeholder: 'your email'
+    .text-right
+      %small= activity.message
+
+- @ticket.comments.select{|c|c.new_record?}.each do |comment|
+  .connector
+  = form_for @ticket do |f|
+    .panel.panel-default
+      .panel-body
+        = render "shared/error_messages", target: @ticket
+        = f.fields_for :comments, comment do |b|
+          = b.hidden_field :user_id
+          - if current_user.nil?
             .form-group
-              = b.text_area :text, class: 'form-control', placeholder: 'your comment'
-        .panel-footer
-          = f.submit 'Add comment', class: 'btn btn-lg btn-primary'
+              = b.text_field :email, class: 'form-control', placeholder: 'your email'
+          .form-group
+            = b.text_area :text, class: 'form-control', placeholder: 'your comment'
+      .panel-footer
+        = f.submit 'Add comment', class: 'btn btn-lg btn-primary'
